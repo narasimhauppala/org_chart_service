@@ -62,12 +62,12 @@ org_chart_service/
 ## Quick Start (using Docker)
 
 1.  **Prerequisites:**
-    *   Docker: [Install Docker](https://docs.docker.com/get-docker/)
+    *   Docker: [Install Docker]
     *   Docker Compose: (Usually included with Docker Desktop)
 
 2.  **Clone the repository (if applicable):**
     ```bash
-    git clone <repository_url>
+    git clone https://github.com/narasimhauppala/org_chart_service
     cd org_chart_service
     ```
 
