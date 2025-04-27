@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:14
+    container_name: orgchart_db
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: orgchart_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+        test: ["CMD-SHELL", "pg_isready -U user -d orgchart_db"]
+        interval: 5s
+        timeout: 5s
+        retries: 5
+
+  api:
+    build: .
+    container_name: orgchart_api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy # Wait for db to be ready
+    environment:
+      # Use environment variables from .env file (or host environment)
+      DATABASE_URL: ${DATABASE_URL:-postgresql://user:password@db:5432/orgchart_db} # Provide default
+      # Add other environment variables as needed (e.g., DEBUG)
+      # DEBUG: ${DEBUG:-False}
+    volumes:
+        - .:/app # Mount current directory to /app for development hot-reloading (optional)
+    # Command is overridden to wait for DB and run migrations first
+    # entrypoint: defined in entrypoint.sh
+    command: ["/app/entrypoint.sh"] # Use entrypoint script
+
+volumes:
+  postgres_data: # Define the named volume for persistent DB data 
