@@ -25,7 +25,7 @@ class EmployeeRead(EmployeeBase):
     # direct_reports: List['EmployeeRead'] = [] # Avoid deep recursion for now
 
     class Config:
-        orm_mode = True # Enable ORM mode for compatibility with SQLAlchemy models
+        from_attributes = True # Changed from orm_mode = True for Pydantic v2
 
 
 # --- OrgChart Schemas ---
@@ -41,7 +41,7 @@ class OrgChartRead(OrgChartBase):
     employees: List[EmployeeRead] = [] # Include employees in the OrgChart response
 
     class Config:
-        orm_mode = True
+        from_attributes = True # Changed from orm_mode = True for Pydantic v2
 
 # Schema for the hierarchy endpoint (Direct Reports)
 class DirectReports(BaseModel):

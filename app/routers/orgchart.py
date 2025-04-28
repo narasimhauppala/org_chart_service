@@ -239,9 +239,13 @@ def get_employee_direct_reports(org_id: int, employee_id: int, db: Session = Dep
     # Ensure the target employee exists in the specified org
     get_employee_or_404(employee_id, db, org_id)
 
+    # Fetch direct reports
     direct_reports = db.query(Employee).filter(Employee.manager_id == employee_id).all()
 
-    return DirectReports(direct_reports=direct_reports)
+    # Convert SQLAlchemy models to Pydantic models
+    direct_reports_pydantic = [EmployeeRead.from_orm(report) for report in direct_reports]
+
+    return DirectReports(direct_reports=direct_reports_pydantic)
 
 # Placeholder for Manager Chain API (if chosen)
 # @router.get("/{org_id}/employees/{employee_id}/manager_chain", response_model=List[EmployeeRead])
